@@ -32,9 +32,6 @@ async function request(endpoint, options = {}) {
     if (response.status === 401 && endpoint !== '/auth/login') {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('authUser');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
       const message = data?.detail || 'Session expired. Please log in again.';
       const err = new Error(typeof message === 'string' ? message : 'Unauthorized');
       err.status = 401;
