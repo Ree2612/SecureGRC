@@ -1,38 +1,50 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export function Table({ children, className, ...props }) {
+export function Table({ className, children, ...props }) {
   return (
     <div className="w-full overflow-x-auto">
-      <table className={cn('w-full text-left text-xs border-collapse', className)} {...props}>
+      <table
+        className={cn('w-full caption-bottom text-xs text-left border-collapse', className)}
+        {...props}
+      >
         {children}
       </table>
     </div>
   );
 }
 
-export function TableHeader({ children, className, ...props }) {
+export function TableHeader({ className, children, ...props }) {
   return (
-    <thead className={cn('bg-slate-50 border-b border-border text-slate-600 font-semibold uppercase tracking-wider text-[11px]', className)} {...props}>
+    <thead
+      className={cn(
+        'bg-slate-50 dark:bg-slate-900 border-b border-border dark:border-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider',
+        className
+      )}
+      {...props}
+    >
       {children}
     </thead>
   );
 }
 
-export function TableBody({ children, className, ...props }) {
+export function TableBody({ className, children, ...props }) {
   return (
-    <tbody className={cn('divide-y divide-border/75 bg-white text-slate-700', className)} {...props}>
+    <tbody
+      className={cn('divide-y divide-border dark:divide-slate-800/80 bg-white dark:bg-slate-900', className)}
+      {...props}
+    >
       {children}
     </tbody>
   );
 }
 
-export function TableRow({ children, className, clickable = false, ...props }) {
+export function TableRow({ className, clickable = false, children, ...props }) {
   return (
     <tr
       className={cn(
-        'transition-colors duration-100',
-        clickable ? 'cursor-pointer hover:bg-slate-50/80' : 'hover:bg-slate-50/50',
+        'transition-colors',
+        clickable && 'hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer',
         className
       )}
       {...props}
@@ -42,17 +54,23 @@ export function TableRow({ children, className, clickable = false, ...props }) {
   );
 }
 
-export function TableHead({ children, className, ...props }) {
+export function TableHead({ className, children, ...props }) {
   return (
-    <th className={cn('px-4 py-3 font-medium', className)} {...props}>
+    <th
+      className={cn('px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300', className)}
+      {...props}
+    >
       {children}
     </th>
   );
 }
 
-export function TableCell({ children, className, ...props }) {
+export function TableCell({ className, children, ...props }) {
   return (
-    <td className={cn('px-4 py-3 align-middle', className)} {...props}>
+    <td
+      className={cn('px-4 py-3 text-slate-800 dark:text-slate-200 align-middle', className)}
+      {...props}
+    >
       {children}
     </td>
   );

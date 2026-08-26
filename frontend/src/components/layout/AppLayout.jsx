@@ -2,41 +2,61 @@ import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
-import { getMyOrganization, getOrganizations } from '@/services/api';
+import { getMyOrganization, getOrganizations, switchOrganization } from '@/services/api';
+import { useToast } from '@/lib/ToastContext';
 
 export function AppLayout() {
+  const toast = useToast();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [organizations, setOrganizations] = useState([]);
   const [selectedOrg, setSelectedOrg] = useState(null);
   const [selectedFramework, setSelectedFramework] = useState('NIST CSF 2.0');
 
-  useEffect(() => {
-    let mounted = true;
-    Promise.all([getMyOrganization(), getOrganizations()])
-      .then(([myOrg, allOrgs]) => {
-        if (mounted) {
-          if (myOrg) {
-            setSelectedOrg(myOrg);
-            if (myOrg.primary_framework) {
-              setSelectedFramework(myOrg.primary_framework);
-            }
-          }
-          if (Array.isArray(allOrgs)) {
-            setOrganizations(allOrgs);
-          }
+  const loadOrganizations = async () => {
+    try {
+      const [myOrg, allOrgs] = await Promise.all([getMyOrganization(), getOrganizations()]);
+      if (myOrg) {
+        setSelectedOrg(myOrg);
+        if (myOrg.primary_framework) {
+          setSelectedFramework(myOrg.primary_framework);
         }
-      })
-      .catch((err) => {
-        console.warn('Error fetching organization info:', err.message);
-      });
+      }
+      if (Array.isArray(allOrgs)) {
+        setOrganizations(allOrgs);
+      }
+    } catch (err) {
+      console.warn('Error fetching organization info:', err.message);
+    }
+  };
 
-    return () => {
-      mounted = false;
-    };
+  useEffect(() => {
+    loadOrganizations();
   }, []);
 
+  const handleSelectOrg = async (org) => {
+    if (!org || org.id === selectedOrg?.id) return;
+    try {
+      const switched = await switchOrganization(org.id);
+      setSelectedOrg(switched);
+      if (switched.primary_framework) {
+        setSelectedFramework(switched.primary_framework);
+      }
+      toast.info('Switched Workspace', `Active entity: ${switched.name}`);
+    } catch (err) {
+      toast.error('Switch Failed', err.message);
+    }
+  };
+
+  const handleOrganizationCreated = (newOrg) => {
+    setOrganizations((prev) => [newOrg, ...prev.filter((o) => o.id !== newOrg.id)]);
+    setSelectedOrg(newOrg);
+    if (newOrg.primary_framework) {
+      setSelectedFramework(newOrg.primary_framework);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-background dark:bg-slate-950 flex flex-col md:flex-row font-sans transition-colors">
       {/* Fixed Sidebar */}
       <Sidebar
         mobileOpen={mobileOpen}
@@ -50,13 +70,14 @@ export function AppLayout() {
           onToggleMobile={() => setMobileOpen(!mobileOpen)}
           organizations={organizations}
           selectedOrg={selectedOrg}
-          onSelectOrg={setSelectedOrg}
+          onSelectOrg={handleSelectOrg}
           selectedFramework={selectedFramework}
           onSelectFramework={setSelectedFramework}
+          onOrganizationCreated={handleOrganizationCreated}
         />
 
         <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
-          <Outlet context={{ selectedOrg, selectedFramework }} />
+          <Outlet context={{ selectedOrg, selectedFramework, reloadOrganizations: loadOrganizations }} />
         </main>
       </div>
     </div>

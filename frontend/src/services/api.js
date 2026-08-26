@@ -76,6 +76,19 @@ export async function getOrganizations() {
   return request('/organizations');
 }
 
+export async function createOrganization(data) {
+  return request('/organizations', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function switchOrganization(orgId) {
+  return request(`/organizations/switch/${orgId}`, {
+    method: 'POST',
+  });
+}
+
 export async function updateMyOrganization(data) {
   return request('/organizations/me', {
     method: 'PATCH',
