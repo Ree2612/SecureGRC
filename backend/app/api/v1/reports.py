@@ -48,6 +48,36 @@ def create_report(
     db.refresh(report)
     return report
 
+@router.post("/{id}/generate", response_model=ReportResponse)
+def generate_report(
+    id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    report = db.query(Report).filter(
+        Report.id == id,
+        Report.organization_id == current_user.organization_id
+    ).first()
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    
+    report.status = "Generated"
+    report.generated_at = datetime.now(timezone.utc)
+    report.file_url = f"/api/v1/reports/{id}/download"
+    
+    activity = Activity(
+        actor=current_user.name,
+        action="Generated Compliance Report",
+        target=report.name,
+        details=f"Status: {report.status}, Framework: {report.framework}",
+        organization_id=current_user.organization_id
+    )
+    db.add(activity)
+    
+    db.commit()
+    db.refresh(report)
+    return report
+
 @router.get("/{id}/download")
 def download_report(
     id: str,
