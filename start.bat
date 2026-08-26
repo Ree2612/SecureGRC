@@ -20,12 +20,18 @@ echo [3/3] Waiting for servers to initialize...
 timeout /t 3 /nobreak >nul
 
 echo.
-echo Opening browser at http://localhost:5173/ ...
-start http://localhost:5173/
+echo Launching browser to http://localhost:5173/ ...
+if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
+    start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" "http://localhost:5173/"
+) else if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
+    start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "http://localhost:5173/"
+) else (
+    start http://localhost:5173/
+)
 
 echo.
 echo ======================================================================
-echo  SecureGRC is now running!
+echo  SecureGRC is running!
 echo.
 echo  - Frontend Web UI:  http://localhost:5173/
 echo  - Backend REST API: http://localhost:8000/api/v1

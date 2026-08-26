@@ -15,8 +15,17 @@ Start-Process cmd -ArgumentList "/k", "cd /d `"$rootDir\frontend`" && npm run de
 Write-Host "[3/3] Waiting for servers to initialize..." -ForegroundColor Yellow
 Start-Sleep -Seconds 3
 
-Write-Host "Opening web browser to http://localhost:5173/ ..." -ForegroundColor Green
-Start-Process "http://localhost:5173/"
+Write-Host "Launching web browser to http://localhost:5173/ ..." -ForegroundColor Green
+$chromePath = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+$edgePath = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+
+if (Test-Path $chromePath) {
+    Start-Process $chromePath "http://localhost:5173/"
+} elseif (Test-Path $edgePath) {
+    Start-Process $edgePath "http://localhost:5173/"
+} else {
+    Start-Process "http://localhost:5173/"
+}
 
 Write-Host ""
 Write-Host "======================================================================" -ForegroundColor Green
