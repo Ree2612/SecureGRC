@@ -15,7 +15,7 @@ Start-Process cmd -ArgumentList "/k", "cd /d `"$rootDir\frontend`" && npm run de
 Write-Host "[3/3] Waiting for servers to initialize..." -ForegroundColor Yellow
 Start-Sleep -Seconds 3
 
-Write-Host "Launching web browser to http://localhost:5173/ ..." -ForegroundColor Green
+Write-Host "Opening web browser to http://localhost:5173/ ..." -ForegroundColor Green
 Start-Process "http://localhost:5173/"
 
 Write-Host ""

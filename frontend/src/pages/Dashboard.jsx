@@ -25,7 +25,9 @@ import {
 } from 'lucide-react';
 
 export function Dashboard() {
-  const { selectedOrg, selectedFramework } = useOutletContext();
+  const context = useOutletContext() || {};
+  const selectedOrg = context.selectedOrg;
+  const selectedFramework = context.selectedFramework;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
