@@ -82,7 +82,14 @@ def get_nist_coverage(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    from app.seed import seed_organization_records
     org_id = current_user.organization_id
+    
+    # Auto-seed controls if this tenant is new or unpopulated
+    existing_count = db.query(Control).filter(Control.organization_id == org_id).count()
+    if existing_count == 0:
+        seed_organization_records(db, org_id)
+
     controls = db.query(Control).filter(Control.organization_id == org_id).all()
     
     functions = ["Govern", "Identify", "Protect", "Detect", "Respond", "Recover"]

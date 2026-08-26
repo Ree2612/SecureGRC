@@ -916,5 +916,102 @@ def seed_database(db: Session = None):
         if close_db:
             db.close()
 
+def seed_organization_records(db: Session, target_org_id: str):
+    """
+    Populates full baseline controls, risks, assets, gaps, and remediation tasks
+    for a newly created or unseeded organization tenant.
+    """
+    # 1. Find a reference organization to clone controls and standard records from
+    ref_org = db.query(Organization).filter(Organization.id != target_org_id).first()
+    if not ref_org:
+        return
+
+    # Clone Controls
+    ref_controls = db.query(Control).filter(Control.organization_id == ref_org.id).all()
+    new_controls = []
+    for c in ref_controls:
+        new_controls.append(Control(
+            control_code=c.control_code,
+            name=c.name,
+            requirement=c.requirement,
+            framework=c.framework,
+            function=c.function,
+            category=c.category,
+            implementation_status=c.implementation_status,
+            effectiveness=c.effectiveness,
+            owner=c.owner,
+            notes=c.notes,
+            organization_id=target_org_id
+        ))
+    db.add_all(new_controls)
+
+    # Clone Risks
+    ref_risks = db.query(Risk).filter(Risk.organization_id == ref_org.id).all()
+    new_risks = []
+    for r in ref_risks:
+        new_risks.append(Risk(
+            title=r.title,
+            description=r.description,
+            category=r.category,
+            likelihood=r.likelihood,
+            impact=r.impact,
+            inherent_risk=r.inherent_risk,
+            residual_risk=r.residual_risk,
+            status=r.status,
+            owner=r.owner,
+            threat_source=r.threat_source,
+            existing_controls=r.existing_controls,
+            organization_id=target_org_id
+        ))
+    db.add_all(new_risks)
+
+    # Clone Assets
+    ref_assets = db.query(Asset).filter(Asset.organization_id == ref_org.id).all()
+    new_assets = []
+    for a in ref_assets:
+        new_assets.append(Asset(
+            name=a.name,
+            type=a.type,
+            criticality=a.criticality,
+            owner=a.owner,
+            description=a.description,
+            status=a.status,
+            organization_id=target_org_id
+        ))
+    db.add_all(new_assets)
+
+    # Clone Gaps
+    ref_gaps = db.query(Gap).filter(Gap.organization_id == ref_org.id).all()
+    new_gaps = []
+    for g in ref_gaps:
+        new_gaps.append(Gap(
+            title=g.title,
+            framework=g.framework,
+            control_code=g.control_code,
+            business_impact=g.business_impact,
+            recommendation=g.recommendation,
+            owner=g.owner,
+            due_date=g.due_date,
+            status=g.status,
+            organization_id=target_org_id
+        ))
+    db.add_all(new_gaps)
+
+    # Clone Reports
+    ref_reports = db.query(Report).filter(Report.organization_id == ref_org.id).all()
+    new_reports = []
+    for rep in ref_reports:
+        new_reports.append(Report(
+            name=rep.name,
+            framework=rep.framework,
+            type=rep.type,
+            status=rep.status,
+            organization_id=target_org_id
+        ))
+    db.add_all(new_reports)
+
+    db.commit()
+
 if __name__ == "__main__":
     seed_database()
+

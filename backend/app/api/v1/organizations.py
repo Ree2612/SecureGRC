@@ -44,6 +44,10 @@ def create_organization(
     db.commit()
     db.refresh(new_org)
     
+    # Seed baseline controls, risks, assets, and templates for the new company
+    from app.seed import seed_organization_records
+    seed_organization_records(db, new_org.id)
+
     # Switch user to the newly created company
     current_user.organization_id = new_org.id
     db.commit()
