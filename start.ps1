@@ -6,6 +6,13 @@ Write-Host ""
 
 $rootDir = $PSScriptRoot
 
+Write-Host "[0/3] Clearing any previous instances on ports 8000 and 5173..." -ForegroundColor Yellow
+$pidsToKill = Get-NetTCPConnection -LocalPort 8000, 5173 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique
+if ($pidsToKill) {
+    Stop-Process -Id $pidsToKill -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 1
+}
+
 Write-Host "[1/3] Starting FastAPI Backend on port 8000..." -ForegroundColor Yellow
 Start-Process cmd -ArgumentList "/k", "cd /d `"$rootDir\backend`" && python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
 
@@ -13,7 +20,7 @@ Write-Host "[2/3] Starting Vite Frontend on port 5173..." -ForegroundColor Yello
 Start-Process cmd -ArgumentList "/k", "cd /d `"$rootDir\frontend`" && npm run dev"
 
 Write-Host "[3/3] Waiting for servers to initialize..." -ForegroundColor Yellow
-Start-Sleep -Seconds 3
+Start-Sleep -Seconds 4
 
 Write-Host "Launching web browser to http://localhost:5173/ ..." -ForegroundColor Green
 $chromePath = "C:\Program Files\Google\Chrome\Application\chrome.exe"
