@@ -96,7 +96,9 @@ GRC/
 - **Enterprise Seed Dataset**: Pre-populates real-world NIST CSF 2.0 controls across all functions (*Govern, Identify, Protect, Detect, Respond, Recover*), mapped ISO 27001 Annex A clauses, CIS Safeguards, critical cloud/database/identity assets, realistic risks with 1–5 coordinates, open audit gaps, and remediation actions.
 
 ### 2. Frontend Application (`frontend/`)
-- **Modern Minimalist Cybersecurity Aesthetic**: Clean typography hierarchy (Inter), subtle borders (`#E2E8F0`), restrained semantic badges (Critical: red, High: orange, Medium: amber, Low: green), and zero excessive shadows or flashy AI cards.
+- **Modern Minimalist Cybersecurity Aesthetic**: Clean typography hierarchy (Inter), subtle borders, restrained semantic badges, and a crisp enterprise interface (like Datadog/CrowdStrike) with zero flashy AI gimmicks.
+- **Full Dark Mode**: High-contrast, eye-friendly dark palette (Slate-950/Slate-900) with a 1-click Sun/Moon toggle in the Topbar and Settings.
+- **Multi-Company / Multi-Tenant Support**: Add new companies and switch active company workspaces on the fly from the Topbar or Settings.
 - **Unified API Client (`services/api.js`)**: All HTTP calls flow through a single centralized API layer that automatically injects JWT access tokens and globally intercepts `401 Unauthorized` responses to clear invalid sessions and redirect to login.
 - **Zero Mock / Base44 Dependencies**: 100% of data displayed in the UI is fetched dynamically from the FastAPI backend.
 - **Core Modules & Pages**:
