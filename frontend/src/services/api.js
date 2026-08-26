@@ -299,10 +299,28 @@ export async function createReport(data) {
   });
 }
 
-export async function generateReport(id) {
-  return request(`/reports/${id}/generate`, {
-    method: 'POST',
+export async function downloadReport(reportId, reportName = 'audit_report') {
+  const token = localStorage.getItem('accessToken');
+  const response = await fetch(`${API_BASE_URL}/reports/${reportId}/download`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
   });
+
+  if (!response.ok) {
+    throw new Error(`Download failed with status ${response.status}`);
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${reportName.toLowerCase().replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.html`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+  return true;
 }
 
 // ---------------- USERS & SETTINGS ----------------
