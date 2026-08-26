@@ -6,18 +6,18 @@ import { ShieldCheck, ShieldAlert, FileText, CheckCircle2, UserCheck, Activity }
 export function ActivityFeed({ activities = [] }) {
   const getActionIcon = (action) => {
     if (action.includes('Control') || action.includes('Assessed')) {
-      return <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />;
+      return <ShieldCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />;
     }
     if (action.includes('Risk')) {
-      return <ShieldAlert className="w-3.5 h-3.5 text-orange-600" />;
+      return <ShieldAlert className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />;
     }
     if (action.includes('Report')) {
-      return <FileText className="w-3.5 h-3.5 text-indigo-600" />;
+      return <FileText className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />;
     }
     if (action.includes('Resolved') || action.includes('Remediation')) {
-      return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />;
+      return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />;
     }
-    return <Activity className="w-3.5 h-3.5 text-slate-500" />;
+    return <Activity className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />;
   };
 
   return (
@@ -28,30 +28,30 @@ export function ActivityFeed({ activities = [] }) {
       />
       <CardContent className="pt-2 pb-4">
         {activities.length === 0 ? (
-          <div className="py-8 text-center text-xs text-slate-400">
+          <div className="py-8 text-center text-xs text-slate-400 dark:text-slate-500">
             No recent activity recorded.
           </div>
         ) : (
-          <div className="divide-y divide-border/60">
+          <div className="divide-y divide-border/60 dark:divide-slate-800/80">
             {activities.slice(0, 7).map((item) => (
               <div key={item.id} className="py-3 first:pt-0 last:pb-0 flex items-start gap-3">
-                <div className="w-7 h-7 rounded-full bg-slate-50 border border-border flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-7 h-7 rounded-full bg-slate-50 dark:bg-slate-800 border border-border dark:border-slate-700 flex items-center justify-center shrink-0 mt-0.5">
                   {getActionIcon(item.action)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-semibold text-slate-900 truncate">
-                      {item.actor} <span className="font-normal text-slate-500">• {item.action}</span>
+                    <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
+                      {item.actor} <span className="font-normal text-slate-500 dark:text-slate-400">• {item.action}</span>
                     </p>
-                    <span className="text-[11px] text-slate-400 shrink-0">
+                    <span className="text-[11px] text-slate-400 dark:text-slate-500 shrink-0">
                       {formatTimeAgo(item.timestamp)}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-700 font-medium truncate mt-0.5">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium truncate mt-0.5">
                     {item.target}
                   </p>
                   {item.details && (
-                    <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
                       {item.details}
                     </p>
                   )}

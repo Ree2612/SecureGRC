@@ -93,11 +93,11 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
     >
       <div className="space-y-6 text-xs">
         {/* Requirement Box */}
-        <div className="p-3.5 bg-slate-50 rounded-lg border border-border space-y-1.5">
-          <span className="font-semibold text-slate-800 uppercase tracking-wider text-[10px]">
+        <div className="p-3.5 bg-slate-50 dark:bg-slate-800/70 rounded-lg border border-border dark:border-slate-700 space-y-1.5">
+          <span className="font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider text-[10px]">
             Formal Framework Requirement
           </span>
-          <p className="text-xs text-slate-700 leading-relaxed">
+          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
             {control.requirement}
           </p>
         </div>
@@ -106,13 +106,13 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
         <form onSubmit={handleAssessmentSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Implementation Status
               </label>
               <select
                 value={formData.implementation_status}
                 onChange={(e) => setFormData({ ...formData, implementation_status: e.target.value })}
-                className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="Implemented">Implemented</option>
                 <option value="Partially Implemented">Partially Implemented</option>
@@ -122,13 +122,13 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Operational Effectiveness
               </label>
               <select
                 value={formData.effectiveness}
                 onChange={(e) => setFormData({ ...formData, effectiveness: e.target.value })}
-                className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="Effective">Effective</option>
                 <option value="Partially Effective">Partially Effective</option>
@@ -145,7 +145,7 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Auditor & Implementation Assessment Notes
             </label>
             <textarea
@@ -153,7 +153,7 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
               placeholder="Detail control mechanisms, automation tools, frequency of verification, or exceptions..."
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
@@ -165,11 +165,11 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
         </form>
 
         {/* Evidence Section */}
-        <div className="pt-4 border-t border-border space-y-3">
+        <div className="pt-4 border-t border-border dark:border-slate-800 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Paperclip className="w-4 h-4 text-slate-500" />
-              <h4 className="text-xs font-bold text-slate-900">
+              <Paperclip className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+              <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">
                 Compliance Evidence Artifacts ({evidenceList.length})
               </h4>
             </div>
@@ -187,7 +187,7 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
           {showAddEvidence && (
             <form
               onSubmit={handleAddEvidenceSubmit}
-              className="p-3.5 bg-blue-50/50 rounded-lg border border-blue-200 space-y-3"
+              className="p-3.5 bg-blue-50/50 dark:bg-blue-950/40 rounded-lg border border-blue-200 dark:border-blue-800 space-y-3"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
@@ -215,7 +215,7 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
 
           {/* Evidence List */}
           {evidenceList.length === 0 ? (
-            <div className="p-4 bg-slate-50 border border-dashed border-border rounded-lg text-center text-slate-400 text-xs">
+            <div className="p-4 bg-slate-50 dark:bg-slate-800/40 border border-dashed border-border dark:border-slate-700 rounded-lg text-center text-slate-400 dark:text-slate-500 text-xs">
               No evidence artifacts attached to this control yet.
             </div>
           ) : (
@@ -223,13 +223,13 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
               {evidenceList.map((ev) => (
                 <div
                   key={ev.id}
-                  className="flex items-center justify-between p-3 bg-white border border-border rounded-lg"
+                  className="flex items-center justify-between p-3 bg-white dark:bg-slate-800/80 border border-border dark:border-slate-700 rounded-lg"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <FileText className="w-4 h-4 text-primary-600 shrink-0" />
+                    <FileText className="w-4 h-4 text-primary-600 dark:text-primary-400 shrink-0" />
                     <div className="truncate">
-                      <div className="font-semibold text-slate-900 truncate">{ev.title}</div>
-                      <div className="text-[11px] text-slate-400 flex items-center gap-2">
+                      <div className="font-semibold text-slate-900 dark:text-slate-100 truncate">{ev.title}</div>
+                      <div className="text-[11px] text-slate-400 dark:text-slate-400 flex items-center gap-2">
                         <span>{ev.file_name}</span>
                         <span>•</span>
                         <span>Uploaded by {ev.uploaded_by}</span>

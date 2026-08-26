@@ -67,8 +67,8 @@ export function Risks() {
       {/* Top Action Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">Enterprise Risk Register</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">Enterprise Risk Register</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Identify, assess, and track inherent and residual cybersecurity risks across your organization.
           </p>
         </div>
@@ -78,7 +78,7 @@ export function Risks() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 bg-white rounded-lg border border-border shadow-card space-y-3">
+      <div className="p-4 bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <Input
             placeholder="Search risk scenario, title, owner..."
@@ -91,7 +91,7 @@ export function Risks() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">All Categories</option>
               <option value="Infrastructure">Infrastructure</option>
@@ -108,7 +108,7 @@ export function Risks() {
             <select
               value={severity}
               onChange={(e) => setSeverity(e.target.value)}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">All Inherent Severities</option>
               <option value="Critical">Critical Severity</option>
@@ -122,7 +122,7 @@ export function Risks() {
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">All Statuses</option>
               <option value="Open">Open</option>
@@ -134,8 +134,8 @@ export function Risks() {
         </div>
 
         {(search || category || severity || status) && (
-          <div className="flex items-center justify-between text-xs pt-2 border-t border-border">
-            <span className="text-slate-500">
+          <div className="flex items-center justify-between text-xs pt-2 border-t border-border dark:border-slate-800">
+            <span className="text-slate-500 dark:text-slate-400">
               Showing {risks.length} filtered {risks.length === 1 ? 'risk' : 'risks'}
             </span>
             <button
@@ -145,7 +145,7 @@ export function Risks() {
                 setSeverity('');
                 setStatus('');
               }}
-              className="text-primary-600 hover:text-primary-800 font-medium"
+              className="text-primary-600 dark:text-primary-400 hover:text-primary-800 font-medium"
             >
               Reset Filters
             </button>
@@ -157,7 +157,7 @@ export function Risks() {
       {error ? (
         <ErrorState message={error} onRetry={loadRisks} />
       ) : loading ? (
-        <div className="bg-white rounded-lg border border-border shadow-card">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card">
           <TableSkeleton rows={6} cols={8} />
         </div>
       ) : risks.length === 0 ? (

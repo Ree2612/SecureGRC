@@ -38,8 +38,8 @@ export function RiskHeatmapPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-bold text-slate-900 tracking-tight">Enterprise Risk Heatmap</h2>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">Enterprise Risk Heatmap</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
           Visual 5×5 Likelihood vs. Impact matrix computed dynamically from active enterprise risk scenarios.
         </p>
       </div>

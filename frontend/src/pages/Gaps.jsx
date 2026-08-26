@@ -116,8 +116,8 @@ export function Gaps() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">Compliance Gap Analysis</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">Compliance Gap Analysis</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Identify control deficiencies, evaluate business risk exposure, and trigger remediation tasks.
           </p>
         </div>
@@ -127,7 +127,7 @@ export function Gaps() {
       </div>
 
       {/* Filter Bar */}
-      <div className="p-4 bg-white rounded-lg border border-border shadow-card flex flex-col sm:flex-row gap-3">
+      <div className="p-4 bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card flex flex-col sm:flex-row gap-3">
         <div className="flex-1">
           <Input
             placeholder="Search gap title, control code, owner..."
@@ -140,7 +140,7 @@ export function Gaps() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Statuses</option>
             <option value="Open">Open Gaps</option>
@@ -154,7 +154,7 @@ export function Gaps() {
       {error ? (
         <ErrorState message={error} onRetry={loadGaps} />
       ) : loading ? (
-        <div className="bg-white rounded-lg border border-border shadow-card">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card">
           <TableSkeleton rows={6} cols={7} />
         </div>
       ) : gaps.length === 0 ? (
@@ -166,7 +166,7 @@ export function Gaps() {
           onAction={() => setIsCreateOpen(true)}
         />
       ) : (
-        <div className="border border-border rounded-lg bg-white overflow-hidden shadow-card">
+        <div className="border border-border dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 overflow-hidden shadow-card">
           <Table>
             <TableHeader>
               <TableRow>
@@ -182,24 +182,24 @@ export function Gaps() {
             <TableBody>
               {gaps.map((gap) => (
                 <TableRow key={gap.id}>
-                  <TableCell className="font-mono font-bold text-slate-900">
+                  <TableCell className="font-mono font-bold text-slate-900 dark:text-slate-100">
                     {gap.control_code}
                   </TableCell>
                   <TableCell className="max-w-xs">
-                    <div className="font-semibold text-slate-900 truncate">{gap.title}</div>
-                    <div className="text-[11px] text-primary-700 font-medium mt-0.5">
+                    <div className="font-semibold text-slate-900 dark:text-slate-100 truncate">{gap.title}</div>
+                    <div className="text-[11px] text-primary-700 dark:text-primary-400 font-medium mt-0.5">
                       {gap.framework}
                     </div>
                   </TableCell>
-                  <TableCell className="text-slate-600 max-w-xs text-xs leading-relaxed">
+                  <TableCell className="text-slate-600 dark:text-slate-300 max-w-xs text-xs leading-relaxed">
                     {gap.business_impact}
                   </TableCell>
-                  <TableCell className="text-slate-600 max-w-xs text-xs leading-relaxed">
+                  <TableCell className="text-slate-600 dark:text-slate-300 max-w-xs text-xs leading-relaxed">
                     {gap.recommendation}
                   </TableCell>
                   <TableCell className="text-xs">
-                    <div className="font-medium text-slate-900">{gap.owner}</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">Due: {gap.due_date}</div>
+                    <div className="font-medium text-slate-900 dark:text-slate-100">{gap.owner}</div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Due: {gap.due_date}</div>
                   </TableCell>
                   <TableCell>
                     <Badge status={gap.status}>{gap.status}</Badge>
@@ -231,7 +231,7 @@ export function Gaps() {
                         </>
                       )}
                       {gap.status === 'Resolved' && (
-                        <span className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1 justify-end">
+                        <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1 justify-end">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           Verified
                         </span>
@@ -270,13 +270,13 @@ export function Gaps() {
               required
             />
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Framework
               </label>
               <select
                 value={newGap.framework}
                 onChange={(e) => setNewGap({ ...newGap, framework: e.target.value })}
-                className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="NIST CSF 2.0">NIST CSF 2.0</option>
                 <option value="ISO/IEC 27001:2022">ISO/IEC 27001:2022</option>
@@ -303,7 +303,7 @@ export function Gaps() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Business & Audit Impact
             </label>
             <textarea
@@ -311,12 +311,12 @@ export function Gaps() {
               placeholder="Audit qualification risks, potential data breach vectors..."
               value={newGap.business_impact}
               onChange={(e) => setNewGap({ ...newGap, business_impact: e.target.value })}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Remediation Recommendation
             </label>
             <textarea
@@ -324,11 +324,11 @@ export function Gaps() {
               placeholder="Technical implementation steps, automation tools, or policy revisions..."
               value={newGap.recommendation}
               onChange={(e) => setNewGap({ ...newGap, recommendation: e.target.value })}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border dark:border-slate-800">
             <Button type="button" variant="secondary" onClick={() => setIsCreateOpen(false)}>
               Cancel
             </Button>

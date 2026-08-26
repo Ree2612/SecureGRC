@@ -97,13 +97,13 @@ export function Assets() {
   const getTypeIcon = (type) => {
     switch (type) {
       case 'Database':
-        return <Database className="w-3.5 h-3.5 text-blue-600" />;
+        return <Database className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />;
       case 'Identity':
-        return <Key className="w-3.5 h-3.5 text-amber-600" />;
+        return <Key className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />;
       case 'Endpoint':
-        return <Monitor className="w-3.5 h-3.5 text-purple-600" />;
+        return <Monitor className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />;
       default:
-        return <Cloud className="w-3.5 h-3.5 text-indigo-600" />;
+        return <Cloud className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />;
     }
   };
 
@@ -112,10 +112,10 @@ export function Assets() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             Asset Inventory & Scope
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Maintain dynamic inventory of critical cloud, database, identity, and SaaS systems in audit scope.
           </p>
         </div>
@@ -125,7 +125,7 @@ export function Assets() {
       </div>
 
       {/* Filter Bar */}
-      <div className="p-4 bg-white rounded-lg border border-border shadow-card grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="p-4 bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Input
           placeholder="Search asset, owner, description..."
           icon={Search}
@@ -137,7 +137,7 @@ export function Assets() {
           <select
             value={criticalityFilter}
             onChange={(e) => setCriticalityFilter(e.target.value)}
-            className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Criticalities</option>
             <option value="Critical">Critical</option>
@@ -151,7 +151,7 @@ export function Assets() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Asset Types</option>
             <option value="Cloud Infrastructure">Cloud Infrastructure</option>
@@ -168,7 +168,7 @@ export function Assets() {
       {error ? (
         <ErrorState message={error} onRetry={loadAssets} />
       ) : loading ? (
-        <div className="bg-white rounded-lg border border-border shadow-card">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card">
           <TableSkeleton rows={6} cols={6} />
         </div>
       ) : assets.length === 0 ? (
@@ -180,7 +180,7 @@ export function Assets() {
           onAction={() => setIsCreateOpen(true)}
         />
       ) : (
-        <div className="border border-border rounded-lg bg-white overflow-hidden shadow-card">
+        <div className="border border-border dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 overflow-hidden shadow-card">
           <Table>
             <TableHeader>
               <TableRow>
@@ -196,11 +196,11 @@ export function Assets() {
             <TableBody>
               {assets.map((asset) => (
                 <TableRow key={asset.id}>
-                  <TableCell className="font-semibold text-slate-900 max-w-xs truncate">
+                  <TableCell className="font-semibold text-slate-900 dark:text-slate-100 max-w-xs truncate">
                     {asset.name}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1.5 font-medium text-slate-700">
+                    <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium">
                       {getTypeIcon(asset.type)}
                       <span>{asset.type}</span>
                     </div>
@@ -208,11 +208,11 @@ export function Assets() {
                   <TableCell>
                     <Badge severity={asset.criticality}>{asset.criticality}</Badge>
                   </TableCell>
-                  <TableCell className="text-slate-600 font-medium truncate max-w-[130px]">
+                  <TableCell className="text-slate-600 dark:text-slate-300 font-medium truncate max-w-[140px]">
                     {asset.owner}
                   </TableCell>
-                  <TableCell className="text-slate-600 max-w-xs text-xs truncate">
-                    {asset.description}
+                  <TableCell className="text-slate-500 dark:text-slate-400 max-w-xs text-xs truncate">
+                    {asset.description || 'In scope for annual audit'}
                   </TableCell>
                   <TableCell>
                     <Badge status={asset.status}>{asset.status}</Badge>
@@ -221,11 +221,11 @@ export function Assets() {
                     <Button
                       size="xs"
                       variant="ghost"
+                      icon={Trash2}
                       onClick={() => handleDelete(asset.id, asset.name)}
-                      className="text-slate-400 hover:text-red-600"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </Button>
+                      className="text-slate-400 hover:text-red-600 dark:hover:text-red-400"
+                      title="Delete Asset"
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -238,92 +238,93 @@ export function Assets() {
       <Modal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
-        title="Register Enterprise Asset in Scope"
-        description="Add compute nodes, databases, or cloud environments for continuous compliance auditing"
+        title="Register Asset in Audit Scope"
+        description="Catalog a critical cloud environment, data store, identity provider, or endpoint"
       >
         <form onSubmit={handleCreateSubmit} className="space-y-4 text-xs">
           <Input
-            label="Asset Name *"
-            placeholder="e.g. AWS Production Aurora PostgreSQL Cluster"
+            label="Asset System Name *"
+            placeholder="e.g. AWS Production VPC - us-east-1"
             value={newAsset.name}
             onChange={(e) => setNewAsset({ ...newAsset, name: e.target.value })}
             required
+            autoFocus
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">
-                Asset Type
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                Asset Classification Type
               </label>
               <select
                 value={newAsset.type}
                 onChange={(e) => setNewAsset({ ...newAsset, type: e.target.value })}
-                className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="Cloud Infrastructure">Cloud Infrastructure</option>
-                <option value="Database">Database</option>
-                <option value="Compute">Compute</option>
-                <option value="Identity">Identity</option>
-                <option value="Endpoint">Endpoint</option>
-                <option value="SaaS">SaaS Platform</option>
+                <option value="Database">Database & Data Store</option>
+                <option value="Identity">Identity Provider (IdP)</option>
+                <option value="Compute">Compute Cluster</option>
+                <option value="Endpoint">Operator Endpoint</option>
+                <option value="SaaS">SaaS Application</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">
-                Criticality Tier
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                Business Criticality
               </label>
               <select
                 value={newAsset.criticality}
                 onChange={(e) => setNewAsset({ ...newAsset, criticality: e.target.value })}
-                className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <option value="Critical">Critical</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="Critical">Critical (Tier 0 / Core Infrastructure)</option>
+                <option value="High">High (Tier 1 / Production)</option>
+                <option value="Medium">Medium (Tier 2 / Internal Services)</option>
+                <option value="Low">Low (Tier 3 / Non-Production)</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Asset Owner / Team *"
-              placeholder="e.g. DevOps & Infrastructure"
+              label="Assigned Asset Custodian / Owner *"
+              placeholder="e.g. Infrastructure Engineering"
               value={newAsset.owner}
               onChange={(e) => setNewAsset({ ...newAsset, owner: e.target.value })}
               required
             />
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">
-                Lifecycle Status
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                Asset Status
               </label>
               <select
                 value={newAsset.status}
                 onChange={(e) => setNewAsset({ ...newAsset, status: e.target.value })}
-                className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <option value="Active">Active</option>
-                <option value="Maintenance">Maintenance</option>
-                <option value="Deprecated">Deprecated</option>
+                <option value="Active">Active / Monitored</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Decommissioned">Decommissioned</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1.5">
-              Description & Audit Context
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              Technical Description & Compliance Scope
             </label>
             <textarea
               rows={2}
-              placeholder="Detail data sensitivity, environment regions, or hosted workloads..."
+              placeholder="Production Kubernetes workloads, sensitive customer data store, OAuth provider..."
               value={newAsset.description}
               onChange={(e) => setNewAsset({ ...newAsset, description: e.target.value })}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border dark:border-slate-800">
             <Button type="button" variant="secondary" onClick={() => setIsCreateOpen(false)}>
               Cancel
             </Button>

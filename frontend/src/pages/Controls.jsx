@@ -60,16 +60,16 @@ export function Controls() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
           Control Assessment & Verification
         </h2>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
           Evaluate operational implementation, measure design effectiveness, and attach compliance audit evidence.
         </p>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 bg-white rounded-lg border border-border shadow-card space-y-3">
+      <div className="p-4 bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           <Input
             placeholder="Search code, requirement, owner..."
@@ -82,7 +82,7 @@ export function Controls() {
             <select
               value={framework}
               onChange={(e) => setFramework(e.target.value)}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">All Frameworks</option>
               <option value="NIST CSF 2.0">NIST CSF 2.0</option>
@@ -95,7 +95,7 @@ export function Controls() {
             <select
               value={functionFilter}
               onChange={(e) => setFunctionFilter(e.target.value)}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">All Functions</option>
               <option value="Govern">Govern</option>
@@ -111,7 +111,7 @@ export function Controls() {
             <select
               value={implStatus}
               onChange={(e) => setImplStatus(e.target.value)}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">All Implementations</option>
               <option value="Implemented">Implemented</option>
@@ -125,7 +125,7 @@ export function Controls() {
             <select
               value={effectiveness}
               onChange={(e) => setEffectiveness(e.target.value)}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">All Effectiveness</option>
               <option value="Effective">Effective</option>
@@ -137,8 +137,8 @@ export function Controls() {
         </div>
 
         {(search || framework || functionFilter || implStatus || effectiveness) && (
-          <div className="flex items-center justify-between text-xs pt-2 border-t border-border">
-            <span className="text-slate-500">
+          <div className="flex items-center justify-between text-xs pt-2 border-t border-border dark:border-slate-800">
+            <span className="text-slate-500 dark:text-slate-400">
               Showing {controls.length} matching controls
             </span>
             <button
@@ -149,7 +149,7 @@ export function Controls() {
                 setImplStatus('');
                 setEffectiveness('');
               }}
-              className="text-primary-600 hover:text-primary-800 font-medium"
+              className="text-primary-600 dark:text-primary-400 hover:text-primary-800 font-medium"
             >
               Reset Filters
             </button>
@@ -161,7 +161,7 @@ export function Controls() {
       {error ? (
         <ErrorState message={error} onRetry={loadControls} />
       ) : loading ? (
-        <div className="bg-white rounded-lg border border-border shadow-card">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card">
           <TableSkeleton rows={8} cols={8} />
         </div>
       ) : controls.length === 0 ? (

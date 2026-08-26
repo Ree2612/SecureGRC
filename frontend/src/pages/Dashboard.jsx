@@ -102,17 +102,17 @@ export function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Executive Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border dark:border-slate-800">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             Security Posture & Compliance Health
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Enterprise assessment against {selectedFramework || 'NIST CSF 2.0'} for {selectedOrg?.name || 'Your Organization'}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-md text-xs font-semibold flex items-center gap-1.5">
+          <div className="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-md text-xs font-semibold flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             Continuous Audit Active
           </div>

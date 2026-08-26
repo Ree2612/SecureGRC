@@ -10,7 +10,7 @@ export function ComplianceCoverage({ data = [], framework = 'NIST CSF 2.0' }) {
       />
       <CardContent className="pt-2 pb-5 space-y-4">
         {data.length === 0 ? (
-          <div className="py-8 text-center text-xs text-slate-400">
+          <div className="py-8 text-center text-xs text-slate-400 dark:text-slate-500">
             No framework coverage data available.
           </div>
         ) : (
@@ -18,23 +18,23 @@ export function ComplianceCoverage({ data = [], framework = 'NIST CSF 2.0' }) {
             <div key={item.category} className="space-y-1.5">
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-slate-800">{item.category}</span>
-                  <span className="text-[11px] text-slate-600">
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">{item.category}</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
                     ({item.implemented} of {item.total} controls)
                   </span>
                 </div>
-                <span className="font-bold text-slate-900">{item.percentage}%</span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{item.percentage}%</span>
               </div>
-              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
                     item.percentage >= 80
-                      ? 'bg-emerald-600'
+                      ? 'bg-emerald-600 dark:bg-emerald-500'
                       : item.percentage >= 50
-                      ? 'bg-primary-600'
+                      ? 'bg-primary-600 dark:bg-primary-500'
                       : item.percentage >= 25
-                      ? 'bg-amber-500'
-                      : 'bg-red-500'
+                      ? 'bg-amber-500 dark:bg-amber-400'
+                      : 'bg-red-500 dark:bg-red-400'
                   }`}
                   style={{ width: `${item.percentage}%` }}
                 />

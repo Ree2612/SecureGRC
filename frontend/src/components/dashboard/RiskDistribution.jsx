@@ -26,13 +26,13 @@ export function RiskDistribution({ data = [] }) {
               <PieChart>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: '#1E293B',
                     borderRadius: '6px',
-                    border: '1px solid #E2E8F0',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+                    border: '1px solid #334155',
+                    color: '#F8FAFC',
                     fontSize: '11px',
                   }}
-                  itemStyle={{ color: '#0F172A', fontWeight: 600 }}
+                  itemStyle={{ color: '#F8FAFC', fontWeight: 600 }}
                 />
                 <Pie
                   data={data}
@@ -54,27 +54,27 @@ export function RiskDistribution({ data = [] }) {
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute text-center pointer-events-none">
-              <div className="text-xl font-bold text-slate-900 leading-none">{totalRisks}</div>
-              <div className="text-[10px] uppercase font-semibold text-slate-400 mt-1">Risks</div>
+              <div className="text-xl font-bold text-slate-900 dark:text-slate-100 leading-none">{totalRisks}</div>
+              <div className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 mt-1">Risks</div>
             </div>
           </div>
 
-          {/* Breakdown Legend List */}
-          <div className="space-y-2.5">
+          {/* Legend / Metrics */}
+          <div className="space-y-2 text-xs">
             {data.map((item) => {
               const pct = totalRisks > 0 ? Math.round((item.count / totalRisks) * 100) : 0;
               return (
-                <div key={item.severity} className="flex items-center justify-between text-xs">
+                <div key={item.severity} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span
                       className="w-2.5 h-2.5 rounded-full"
-                      style={{ backgroundColor: item.color || customColors[item.severity] }}
+                      style={{ backgroundColor: item.color || customColors[item.severity] || '#64748B' }}
                     />
-                    <span className="font-medium text-slate-700">{item.severity}</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300">{item.severity}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-900">{item.count}</span>
-                    <span className="text-slate-400 text-[11px] w-8 text-right">({pct}%)</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-100">{item.count}</span>
+                    <span className="text-slate-400 dark:text-slate-500 text-[11px]">({pct}%)</span>
                   </div>
                 </div>
               );

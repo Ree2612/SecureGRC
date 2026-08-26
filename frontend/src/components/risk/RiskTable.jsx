@@ -7,7 +7,7 @@ import { formatDate } from '@/lib/utils';
 
 export function RiskTable({ risks = [], onSelectRisk, onEditRisk }) {
   return (
-    <div className="border border-border rounded-lg bg-white overflow-hidden shadow-card">
+    <div className="border border-border dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 overflow-hidden shadow-card">
       <Table>
         <TableHeader>
           <TableRow>
@@ -29,16 +29,16 @@ export function RiskTable({ risks = [], onSelectRisk, onEditRisk }) {
               clickable
               onClick={() => onSelectRisk?.(risk)}
             >
-              <TableCell className="font-semibold text-slate-900 max-w-xs truncate">
+              <TableCell className="font-semibold text-slate-900 dark:text-slate-100 max-w-xs truncate">
                 {risk.title}
               </TableCell>
-              <TableCell className="text-slate-600 font-medium">
+              <TableCell className="text-slate-600 dark:text-slate-400 font-medium">
                 {risk.category}
               </TableCell>
-              <TableCell className="text-center font-mono font-medium text-slate-700">
+              <TableCell className="text-center font-mono font-medium text-slate-700 dark:text-slate-300">
                 {risk.likelihood}/5
               </TableCell>
-              <TableCell className="text-center font-mono font-medium text-slate-700">
+              <TableCell className="text-center font-mono font-medium text-slate-700 dark:text-slate-300">
                 {risk.impact}/5
               </TableCell>
               <TableCell>
@@ -47,7 +47,7 @@ export function RiskTable({ risks = [], onSelectRisk, onEditRisk }) {
               <TableCell>
                 <Badge severity={risk.residual_risk}>{risk.residual_risk}</Badge>
               </TableCell>
-              <TableCell className="text-slate-600 truncate max-w-[130px]">
+              <TableCell className="text-slate-600 dark:text-slate-400 truncate max-w-[130px]">
                 {risk.owner}
               </TableCell>
               <TableCell>
@@ -58,19 +58,19 @@ export function RiskTable({ risks = [], onSelectRisk, onEditRisk }) {
                   <Button
                     size="xs"
                     variant="ghost"
-                    title="View Details"
+                    icon={Eye}
                     onClick={() => onSelectRisk?.(risk)}
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant="ghost"
-                    title="Edit Risk"
-                    onClick={() => onEditRisk?.(risk)}
-                  >
-                    <Edit2 className="w-3.5 h-3.5" />
-                  </Button>
+                    title="View Details"
+                  />
+                  {onEditRisk && (
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      icon={Edit2}
+                      onClick={() => onEditRisk?.(risk)}
+                      title="Edit Risk"
+                    />
+                  )}
                 </div>
               </TableCell>
             </TableRow>

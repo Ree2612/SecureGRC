@@ -105,13 +105,13 @@ export function RiskModal({ isOpen, onClose, risk, onSaved }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Risk Category
             </label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="Infrastructure">Infrastructure</option>
               <option value="Application Security">Application Security</option>
@@ -133,7 +133,7 @@ export function RiskModal({ isOpen, onClose, risk, onSaved }) {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-slate-700 mb-1.5">
+          <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             Risk Description & Scenario
           </label>
           <textarea
@@ -141,19 +141,19 @@ export function RiskModal({ isOpen, onClose, risk, onSaved }) {
             placeholder="Describe the threat scenario, vulnerability, and potential business disruption..."
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 bg-slate-50 border border-border rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 bg-slate-50 dark:bg-slate-800/60 border border-border dark:border-slate-700 rounded-lg">
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
               Likelihood (1 - 5)
             </label>
             <select
               value={formData.likelihood}
               onChange={(e) => setFormData({ ...formData, likelihood: Number(e.target.value) })}
-              className="w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value={1}>1 - Rare</option>
               <option value={2}>2 - Unlikely</option>
@@ -164,13 +164,13 @@ export function RiskModal({ isOpen, onClose, risk, onSaved }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
               Impact (1 - 5)
             </label>
             <select
               value={formData.impact}
               onChange={(e) => setFormData({ ...formData, impact: Number(e.target.value) })}
-              className="w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value={1}>1 - Negligible</option>
               <option value={2}>2 - Minor</option>
@@ -181,13 +181,13 @@ export function RiskModal({ isOpen, onClose, risk, onSaved }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
               Residual Risk
             </label>
             <select
               value={formData.residual_risk}
               onChange={(e) => setFormData({ ...formData, residual_risk: e.target.value })}
-              className="w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
@@ -199,13 +199,13 @@ export function RiskModal({ isOpen, onClose, risk, onSaved }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Risk Status
             </label>
             <select
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="Open">Open</option>
               <option value="In Progress">In Progress</option>
@@ -223,7 +223,7 @@ export function RiskModal({ isOpen, onClose, risk, onSaved }) {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-slate-700 mb-1.5">
+          <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             Existing Controls & Safeguards
           </label>
           <textarea
@@ -231,11 +231,11 @@ export function RiskModal({ isOpen, onClose, risk, onSaved }) {
             placeholder="Current mitigation controls, monitoring alarms, or policies in place..."
             value={formData.existing_controls}
             onChange={(e) => setFormData({ ...formData, existing_controls: e.target.value })}
-            className="w-full rounded-md border border-border bg-white px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-md border border-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-border dark:border-slate-800">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
