@@ -22,6 +22,7 @@ class FrameworkMappingResponse(BaseModel):
     target_control_code: str
     target_control_name: Optional[str] = ""
     mapping_strength: str
+    mapping_type: Optional[str] = None
     description: Optional[str] = ""
 
     class Config:

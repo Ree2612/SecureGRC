@@ -1,7 +1,25 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel
 
+class SubTaskBase(BaseModel):
+    title: str
+    status: Optional[str] = "Pending"
+
+class SubTaskCreate(SubTaskBase):
+    pass
+
+class SubTaskUpdate(BaseModel):
+    title: Optional[str] = None
+    status: Optional[str] = None
+
+class SubTaskResponse(SubTaskBase):
+    id: str
+    remediation_task_id: str
+    created_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
 class RemediationCreate(BaseModel):
     task_name: str
     gap_id: Optional[str] = None
@@ -29,6 +47,7 @@ class RemediationResponse(BaseModel):
     status: str
     due_date: str
     organization_id: str
+    subtasks: List[SubTaskResponse] = []
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 

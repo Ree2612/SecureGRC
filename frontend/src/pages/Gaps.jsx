@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getGaps, resolveGap, createRemediationForGap, createGap } from '@/services/api';
+import { getGaps, resolveGap, createRemediationForGap, createGap, getControls } from '@/services/api';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/Table';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -58,6 +58,48 @@ export function Gaps() {
     }, 250);
     return () => clearTimeout(timeout);
   }, [loadGaps]);
+
+  const [availableControls, setAvailableControls] = useState([]);
+
+  useEffect(() => {
+    if (isCreateOpen && newGap.framework) {
+      getControls({ framework: newGap.framework }).then(data => {
+         setAvailableControls(Array.isArray(data) ? data : []);
+      }).catch(() => {});
+    }
+  }, [isCreateOpen, newGap.framework]);
+
+  const handleTitleChange = (e) => {
+    const title = e.target.value;
+    setNewGap(prev => {
+      let suggestedCode = prev.control_code;
+      if (title && availableControls.length > 0) {
+        const lowerTitle = title.toLowerCase();
+        const exactMatch = availableControls.find(c => lowerTitle.includes(c.control_code.toLowerCase()));
+        if (exactMatch) {
+          suggestedCode = exactMatch.control_code;
+        } else {
+          let bestMatch = null;
+          let maxScore = 0;
+          availableControls.forEach(c => {
+            const keywords = c.name.toLowerCase().split(' ').filter(w => w.length > 3);
+            let score = 0;
+            keywords.forEach(kw => {
+              if (lowerTitle.includes(kw)) score++;
+            });
+            if (score > maxScore) {
+              maxScore = score;
+              bestMatch = c;
+            }
+          });
+          if (bestMatch && maxScore > 0) {
+            suggestedCode = bestMatch.control_code;
+          }
+        }
+      }
+      return { ...prev, title, control_code: suggestedCode };
+    });
+  };
 
   const handleResolveGap = async (id, title) => {
     setActionLoadingId(id);
@@ -155,7 +197,7 @@ export function Gaps() {
         <ErrorState message={error} onRetry={loadGaps} />
       ) : loading ? (
         <div className="bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card">
-          <TableSkeleton rows={6} cols={7} />
+          <TableSkeleton rows={6} cols={8} />
         </div>
       ) : gaps.length === 0 ? (
         <EmptyState
@@ -175,6 +217,7 @@ export function Gaps() {
                 <TableHead>Business Impact</TableHead>
                 <TableHead>Recommendation</TableHead>
                 <TableHead>Owner & Due</TableHead>
+                <TableHead className="w-32">Progress</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -200,6 +243,25 @@ export function Gaps() {
                   <TableCell className="text-xs">
                     <div className="font-medium text-slate-900 dark:text-slate-100">{gap.owner}</div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Due: {gap.due_date}</div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                        <span>{gap.status === 'Resolved' ? 100 : gap.status === 'In Progress' ? 50 : 0}%</span>
+                      </div>
+                      <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            gap.status === 'Resolved'
+                              ? 'bg-emerald-600 dark:bg-emerald-500'
+                              : gap.status === 'In Progress'
+                              ? 'bg-primary-600 dark:bg-primary-500'
+                              : 'bg-amber-500 dark:bg-amber-400'
+                          }`}
+                          style={{ width: `${gap.status === 'Resolved' ? 100 : gap.status === 'In Progress' ? 50 : 0}%` }}
+                        />
+                      </div>
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Badge status={gap.status}>{gap.status}</Badge>
@@ -257,7 +319,7 @@ export function Gaps() {
             label="Gap Title *"
             placeholder="e.g. Unauthenticated IAM Role Access Reviews"
             value={newGap.title}
-            onChange={(e) => setNewGap({ ...newGap, title: e.target.value })}
+            onChange={handleTitleChange}
             required
           />
 

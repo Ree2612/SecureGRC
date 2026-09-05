@@ -3,7 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
-import { updateControlAssessment, addControlEvidence, getControlEvidence } from '@/services/api';
+import { updateControlAssessment, addControlEvidence, getControlEvidence, uploadControlEvidence } from '@/services/api';
 import { useToast } from '@/lib/ToastContext';
 import { formatDate } from '@/lib/utils';
 import { FileText, Paperclip, Plus, CheckCircle2, ShieldCheck, Clock } from 'lucide-react';
@@ -20,6 +20,8 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
     notes: '',
     owner: '',
   });
+  // State for evidence file upload
+  const [evidenceFile, setEvidenceFile] = useState(null);
 
   const [newEvidence, setNewEvidence] = useState({
     title: '',
@@ -64,17 +66,27 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
 
   const handleAddEvidenceSubmit = async (e) => {
     e.preventDefault();
-    if (!newEvidence.title || !newEvidence.file_name) {
-      toast.error('Validation Error', 'Title and File Name are required.');
+    if (!newEvidence.title) {
+      toast.error('Validation Error', 'Title is required.');
       return;
     }
-
     try {
-      const created = await addControlEvidence(control.id, newEvidence);
+      let created;
+      if (evidenceFile) {
+        const formData = new FormData();
+        formData.append('title', newEvidence.title);
+        formData.append('file', evidenceFile);
+        created = await uploadControlEvidence(control.id, formData);
+      } else {
+        // Fallback to JSON payload when no file is selected
+        const payload = { ...newEvidence };
+        created = await addControlEvidence(control.id, payload);
+      }
       setEvidenceList((prev) => [created, ...prev]);
       setShowAddEvidence(false);
       setNewEvidence({ title: '', file_name: '', file_type: 'PDF' });
-      toast.success('Evidence Attached', `Uploaded ${newEvidence.file_name}`);
+      setEvidenceFile(null);
+      toast.success('Evidence Attached', `Uploaded ${newEvidence.title}`);
       onUpdated?.();
     } catch (err) {
       toast.error('Upload Failed', err.message);
@@ -204,6 +216,21 @@ export function ControlDetailsModal({ isOpen, onClose, control, onUpdated }) {
                   onChange={(e) => setNewEvidence({ ...newEvidence, file_name: e.target.value })}
                   required
                 />
+                {/* File upload input */}
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Upload File</label>
+                  <input
+                    type="file"
+                    className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-600 file:text-white hover:file:bg-primary-500"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      setEvidenceFile(file);
+                      if (file) {
+                        setNewEvidence((prev) => ({ ...prev, file_name: file.name, file_type: file.type || 'PDF' }));
+                      }
+                    }}
+                  />
+                </div>
               </div>
               <div className="flex justify-end">
                 <Button type="submit" size="xs">

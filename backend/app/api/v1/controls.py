@@ -9,6 +9,7 @@ from app.models.user import User
 from app.models.activity import Activity
 from app.schemas.control import (
     ControlResponse,
+    ControlCreate,
     ControlAssessmentUpdate,
     EvidenceResponse,
     EvidenceCreate
@@ -16,6 +17,39 @@ from app.schemas.control import (
 from app.api.deps import get_current_user
 
 router = APIRouter()
+
+@router.post("", response_model=ControlResponse, status_code=status.HTTP_201_CREATED)
+def create_control(
+    payload: ControlCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    control = Control(
+        control_code=payload.control_code,
+        name=payload.name,
+        requirement=payload.requirement,
+        framework=payload.framework,
+        function=payload.function,
+        category=payload.category,
+        implementation_status="Not Implemented",
+        effectiveness="Untested",
+        owner=payload.owner or "Unassigned",
+        organization_id=current_user.organization_id
+    )
+    db.add(control)
+    
+    activity = Activity(
+        actor=current_user.name,
+        action="Created Control",
+        target=control.control_code,
+        details=f"Added custom control for framework {control.framework}",
+        organization_id=current_user.organization_id
+    )
+    db.add(activity)
+    
+    db.commit()
+    db.refresh(control)
+    return control
 
 @router.get("", response_model=List[ControlResponse])
 def get_controls(
@@ -143,3 +177,44 @@ def add_control_evidence(
     db.commit()
     db.refresh(evidence)
     return evidence
+
+from fastapi import File, UploadFile, Form
+
+@router.post("/{id}/evidence/upload", response_model=EvidenceResponse, status_code=status.HTTP_201_CREATED)
+def upload_control_evidence(
+    id: str,
+    title: str = Form(...),
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    control = db.query(Control).filter(
+        Control.id == id,
+        Control.organization_id == current_user.organization_id
+    ).first()
+    if not control:
+        raise HTTPException(status_code=404, detail="Control not found")
+        
+    evidence = Evidence(
+        control_id=control.id,
+        title=title,
+        file_name=file.filename,
+        file_type=file.filename.split('.')[-1].upper() if '.' in file.filename else "FILE",
+        file_url=f"/evidence/{file.filename}",
+        uploaded_by=current_user.name
+    )
+    db.add(evidence)
+    
+    activity = Activity(
+        actor=current_user.name,
+        action="Uploaded Evidence",
+        target=f"{control.control_code}: {title}",
+        details=f"File: {file.filename}",
+        organization_id=current_user.organization_id
+    )
+    db.add(activity)
+    
+    db.commit()
+    db.refresh(evidence)
+    return evidence
+

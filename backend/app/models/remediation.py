@@ -21,3 +21,16 @@ class RemediationTask(Base):
 
     organization = relationship("Organization", back_populates="remediations")
     gap = relationship("Gap", back_populates="remediations")
+    subtasks = relationship("RemediationSubTask", back_populates="remediation_task", cascade="all, delete-orphan")
+
+class RemediationSubTask(Base):
+    __tablename__ = "remediation_subtasks"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    title = Column(String(255), nullable=False)
+    status = Column(String(50), default="Pending") # Pending, Completed
+    remediation_task_id = Column(String(36), ForeignKey("remediation_tasks.id"), nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    remediation_task = relationship("RemediationTask", back_populates="subtasks")
+

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getControls } from '@/services/api';
 import { ControlTable } from '@/components/controls/ControlTable';
 import { ControlDetailsModal } from '@/components/controls/ControlDetailsModal';
+import { AddControlModal } from '@/components/controls/AddControlModal';
 import { Input } from '@/components/ui/Input';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -23,6 +24,7 @@ export function Controls() {
   // Modal
   const [selectedControl, setSelectedControl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const loadControls = useCallback(async () => {
     setLoading(true);
@@ -59,14 +61,23 @@ export function Controls() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
-          Control Assessment & Verification
-        </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-          Evaluate operational implementation, measure design effectiveness, and attach compliance audit evidence.
-        </p>
-      </div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+              Control Assessment & Verification
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Evaluate operational implementation, measure design effectiveness, and attach compliance audit evidence.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors whitespace-nowrap"
+          >
+            <ShieldCheck className="w-4 h-4" />
+            Add Custom Control
+          </button>
+        </div>
 
       {/* Filter and Search Bar */}
       <div className="p-4 bg-white dark:bg-slate-900 rounded-lg border border-border dark:border-slate-800 shadow-card space-y-3">
@@ -183,6 +194,12 @@ export function Controls() {
         onClose={() => setIsModalOpen(false)}
         control={selectedControl}
         onUpdated={loadControls}
+      />
+      
+      <AddControlModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onCreated={loadControls}
       />
     </div>
   );

@@ -41,6 +41,7 @@ export function Dashboard() {
     setLoading(true);
     setError(null);
     try {
+      const params = { framework: selectedFramework || 'NIST CSF 2.0' };
       const [
         kpisData,
         nistData,
@@ -48,10 +49,10 @@ export function Dashboard() {
         ctrlImplData,
         actData,
       ] = await Promise.all([
-        getKpis(),
-        getNistCoverage(),
-        getRiskDistribution(),
-        getControlImplementation(),
+        getKpis(params),
+        getNistCoverage(params),
+        getRiskDistribution(params),
+        getControlImplementation(params),
         getActivities(15),
       ]);
 
@@ -65,7 +66,7 @@ export function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [selectedFramework]);
 
   useEffect(() => {
     loadDashboardData();
@@ -136,8 +137,8 @@ export function Dashboard() {
           value={kpis.open_risks}
           subtitle="Pending mitigation"
           icon={AlertTriangle}
-          badgeText={kpis.open_risks > 5 ? 'Elevated' : 'Controlled'}
-          statusVariant={kpis.open_risks > 5 ? 'warning' : 'default'}
+          badgeText={kpis.open_risks > 0 ? 'Action Needed' : 'Controlled'}
+          statusVariant={kpis.open_risks > 0 ? 'warning' : 'success'}
         />
         <KpiCard
           title="Control Coverage"

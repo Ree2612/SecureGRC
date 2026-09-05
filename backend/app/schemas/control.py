@@ -27,6 +27,15 @@ class ControlAssessmentUpdate(BaseModel):
     notes: Optional[str] = None
     owner: Optional[str] = None
 
+class ControlCreate(BaseModel):
+    control_code: str
+    name: str
+    requirement: str
+    framework: str
+    function: str
+    category: str
+    owner: Optional[str] = "Unassigned"
+
 class ControlResponse(BaseModel):
     id: str
     control_code: str

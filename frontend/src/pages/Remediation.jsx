@@ -91,14 +91,16 @@ export function Remediation() {
     if (!editingTask) return;
 
     try {
-      await updateRemediation(editingTask.id, {
+      const payload = {
         task_name: editingTask.task_name,
         priority: editingTask.priority,
         owner: editingTask.owner,
-        progress: Number(editingTask.progress),
         status: editingTask.status,
         due_date: editingTask.due_date,
-      });
+        // Progress is derived: Completed => 100, otherwise keep existing value
+        progress: editingTask.status === 'Completed' ? 100 : editingTask.progress,
+      };
+      await updateRemediation(editingTask.id, payload);
       toast.success('Task Updated', 'Remediation task progress recorded.');
       setEditingTask(null);
       loadTasks();
@@ -369,15 +371,7 @@ export function Remediation() {
                   Progress Percentage ({editingTask.progress}%)
                 </label>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                step="5"
-                value={editingTask.progress}
-                onChange={(e) => setEditingTask({ ...editingTask, progress: Number(e.target.value) })}
-                className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary-600"
-              />
+                {/* Progress is calculated automatically based on status. */}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
