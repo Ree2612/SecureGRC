@@ -4,12 +4,16 @@ import { Badge } from '@/components/ui/Badge';
 import { ShieldAlert, Info, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export function RiskHeatmap({ risks = [], onSelectRisk }) {
+export function RiskHeatmap({ risks = [], onSelectRisk, matrixType = '5x5' }) {
   const [selectedCell, setSelectedCell] = useState(null);
 
-  // Likelihood: 1 (Rare) to 5 (Almost Certain)
-  // Impact: 1 (Negligible) to 5 (Catastrophic)
-  const likelihoodLabels = [
+  const is3x3 = matrixType === '3x3';
+
+  const likelihoodLabels = is3x3 ? [
+    { value: 5, label: '5 - High' },
+    { value: 3, label: '3 - Medium' },
+    { value: 1, label: '1 - Low' },
+  ] : [
     { value: 5, label: '5 - Frequent / Almost Certain' },
     { value: 4, label: '4 - Likely' },
     { value: 3, label: '3 - Moderate' },
@@ -17,7 +21,11 @@ export function RiskHeatmap({ risks = [], onSelectRisk }) {
     { value: 1, label: '1 - Rare' },
   ];
 
-  const impactLabels = [
+  const impactLabels = is3x3 ? [
+    { value: 1, label: '1 - Low' },
+    { value: 3, label: '3 - Medium' },
+    { value: 5, label: '5 - High' },
+  ] : [
     { value: 1, label: '1 - Negligible' },
     { value: 2, label: '2 - Minor' },
     { value: 3, label: '3 - Moderate' },
@@ -27,6 +35,13 @@ export function RiskHeatmap({ risks = [], onSelectRisk }) {
 
   const getCellSeverity = (likelihood, impact) => {
     const score = likelihood * impact;
+    if (is3x3) {
+      if (score >= 25) return { level: 'Critical', bg: 'bg-red-500 hover:bg-red-600 text-white', lightBg: 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300' };
+      if (score >= 15) return { level: 'High', bg: 'bg-orange-500 hover:bg-orange-600 text-white', lightBg: 'bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300' };
+      if (score >= 5) return { level: 'Medium', bg: 'bg-amber-400 hover:bg-amber-500 text-slate-900', lightBg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300' };
+      return { level: 'Low', bg: 'bg-emerald-500 hover:bg-emerald-600 text-white', lightBg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' };
+    }
+    
     if (score >= 16) return { level: 'Critical', bg: 'bg-red-500 hover:bg-red-600 text-white', lightBg: 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300' };
     if (score >= 10) return { level: 'High', bg: 'bg-orange-500 hover:bg-orange-600 text-white', lightBg: 'bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300' };
     if (score >= 5) return { level: 'Medium', bg: 'bg-amber-400 hover:bg-amber-500 text-slate-900', lightBg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300' };
@@ -49,7 +64,7 @@ export function RiskHeatmap({ risks = [], onSelectRisk }) {
       {/* 5x5 Matrix */}
       <Card className="lg:col-span-2">
         <CardHeader
-          title="5×5 Quantitative Risk Matrix"
+          title={`${is3x3 ? '3×3' : '5×5'} Quantitative Risk Matrix`}
           description="Interactive distribution of inherent risks by Likelihood vs. Impact"
         />
         <CardContent className="pt-2 pb-6">
@@ -70,8 +85,8 @@ export function RiskHeatmap({ risks = [], onSelectRisk }) {
                     {l.value}
                   </span>
 
-                  {/* 5 Columns */}
-                  <div className="grid grid-cols-5 gap-1.5 flex-1">
+                  {/* Grid Columns */}
+                  <div className={cn("grid gap-1.5 flex-1", is3x3 ? "grid-cols-3" : "grid-cols-5")}>
                     {impactLabels.map((imp) => {
                       const cellRisks = getRisksInCell(l.value, imp.value);
                       const { level, bg } = getCellSeverity(l.value, imp.value);
@@ -112,7 +127,7 @@ export function RiskHeatmap({ risks = [], onSelectRisk }) {
               {/* X-Axis Numbers */}
               <div className="flex items-center gap-1.5 pt-1">
                 <span className="w-6 shrink-0" />
-                <div className="grid grid-cols-5 gap-1.5 flex-1">
+                <div className={cn("grid gap-1.5 flex-1", is3x3 ? "grid-cols-3" : "grid-cols-5")}>
                   {impactLabels.map((imp) => (
                     <span key={imp.value} className="text-center text-xs font-bold text-slate-500 dark:text-slate-400">
                       {imp.value}
@@ -134,19 +149,19 @@ export function RiskHeatmap({ risks = [], onSelectRisk }) {
           <div className="mt-6 pt-4 border-t border-border dark:border-slate-800 flex flex-wrap items-center justify-center gap-5 text-xs text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-sm bg-red-500" />
-              <span>Critical (16–25)</span>
+              <span>Critical ({is3x3 ? '25' : '16–25'})</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-sm bg-orange-500" />
-              <span>High (10–15)</span>
+              <span>High ({is3x3 ? '15' : '10–15'})</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-sm bg-amber-400" />
-              <span>Medium (5–9)</span>
+              <span>Medium ({is3x3 ? '5–9' : '5–9'})</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-sm bg-emerald-500" />
-              <span>Low (1–4)</span>
+              <span>Low ({is3x3 ? '1–3' : '1–4'})</span>
             </div>
           </div>
         </CardContent>

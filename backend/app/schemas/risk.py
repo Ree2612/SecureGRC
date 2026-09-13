@@ -14,6 +14,7 @@ class RiskCreate(BaseModel):
     owner: str
     threat_source: Optional[str] = "External Threat Actor"
     existing_controls: Optional[str] = ""
+    framework: Optional[str] = "NIST CSF 2.0"
 
 class RiskUpdate(BaseModel):
     title: Optional[str] = None
@@ -27,6 +28,7 @@ class RiskUpdate(BaseModel):
     owner: Optional[str] = None
     threat_source: Optional[str] = None
     existing_controls: Optional[str] = None
+    framework: Optional[str] = None
 
 class RiskResponse(BaseModel):
     id: str
@@ -41,6 +43,7 @@ class RiskResponse(BaseModel):
     owner: str
     threat_source: Optional[str] = ""
     existing_controls: Optional[str] = ""
+    framework: Optional[str] = "NIST CSF 2.0"
     organization_id: str
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None

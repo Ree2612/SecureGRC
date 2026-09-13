@@ -27,6 +27,7 @@ def get_risks(
     category: Optional[str] = None,
     status: Optional[str] = None,
     severity: Optional[str] = None,
+    framework: Optional[str] = None,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -39,6 +40,8 @@ def get_risks(
         query = query.filter(Risk.status == status)
     if severity:
         query = query.filter(Risk.inherent_risk == severity)
+    if framework:
+        query = query.filter(Risk.framework == framework)
     return query.order_by(Risk.created_at.desc()).all()
 
 @router.post("", response_model=RiskResponse, status_code=status.HTTP_201_CREATED)

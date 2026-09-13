@@ -3,7 +3,7 @@
  * Communicates exclusively with FastAPI backend at /api/v1 (http://localhost:8000/api/v1)
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 // Simple in‑memory cache for GET requests (TTL 60s)
 const _apiCache = new Map();
@@ -39,7 +39,7 @@ async function request(endpoint, options = {}) {
   const token = localStorage.getItem('accessToken');
   
   const headers = {
-    'Content-Type': 'application/json',
+    ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...(options.headers || {}),
   };
@@ -338,6 +338,10 @@ export async function getGapById(id) {
   return request(`/gaps/${id}`);
 }
 
+export async function getGapFullDetails(id) {
+  return request(`/gaps/${id}/details`);
+}
+
 export async function createGap(data) {
   const result = await request('/gaps', {
     method: 'POST',
@@ -355,9 +359,10 @@ export async function resolveGap(id) {
   return result;
 }
 
-export async function createRemediationForGap(id) {
+export async function createRemediationForGap(id, data = null) {
   const result = await request(`/gaps/${id}/create-remediation`, {
     method: 'POST',
+    ...(data ? { body: JSON.stringify(data) } : {}),
   });
   _clearDashboardCache();
   return result;
@@ -369,10 +374,66 @@ export async function getRemediations(params = {}) {
   return request(`/remediation${query ? `?${query}` : ''}`);
 }
 
+export async function getRemediationMetrics() {
+  return request('/remediation/metrics');
+}
+
+export async function getRemediationFullDetails(id) {
+  return request(`/remediation/${id}/details`);
+}
+
 export async function createRemediation(data) {
   const result = await request('/remediation', {
     method: 'POST',
     body: JSON.stringify(data),
+  });
+  _clearDashboardCache();
+  return result;
+}
+
+export async function submitRemediationForReview(id) {
+  const result = await request(`/remediation/${id}/submit-review`, {
+    method: 'POST',
+  });
+  _clearDashboardCache();
+  return result;
+}
+
+export async function verifyRemediation(id, data = {}) {
+  const result = await request(`/remediation/${id}/verify`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  _clearDashboardCache();
+  return result;
+}
+
+export async function rejectRemediation(id, data) {
+  const result = await request(`/remediation/${id}/reject`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  _clearDashboardCache();
+  return result;
+}
+
+// ---------------- USERS ----------------
+export async function getUsers() {
+  return request('/users');
+}
+
+export async function uploadRemediationEvidence(id, formData) {
+  const result = await request(`/remediation/${id}/evidence/upload`, {
+    method: 'POST',
+    body: formData,
+  });
+  _clearDashboardCache();
+  return result;
+}
+
+export async function deleteRemediationEvidence(id, evidenceId) {
+  const result = await request(`/remediation/${id}/evidence/${evidenceId}`, {
+    method: 'DELETE',
   });
   _clearDashboardCache();
   return result;
@@ -398,6 +459,11 @@ export async function deleteRemediation(id) {
 // ---------------- FRAMEWORKS & MAPPINGS ----------------
 export async function getFrameworks() {
   return request('/frameworks');
+}
+
+export async function getFrameworkStandardControls(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return request(`/frameworks/controls${query ? `?${query}` : ''}`);
 }
 
 export async function getFrameworkMappings(params = {}) {
@@ -442,10 +508,6 @@ export async function downloadReport(reportId, reportName = 'audit_report') {
 }
 
 // ---------------- USERS & SETTINGS ----------------
-export async function getUsers() {
-  return request('/users');
-}
-
 export async function getSettings() {
   return request('/settings');
 }

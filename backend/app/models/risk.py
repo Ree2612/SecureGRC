@@ -19,6 +19,7 @@ class Risk(Base):
     owner = Column(String(255), nullable=False)
     threat_source = Column(String(255), default="External Threat Actor")
     existing_controls = Column(Text, default="")
+    framework = Column(String(100), default="NIST CSF 2.0")
     organization_id = Column(String(36), ForeignKey("organizations.id"), nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

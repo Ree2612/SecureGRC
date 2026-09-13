@@ -16,9 +16,13 @@ class Gap(Base):
     recommendation = Column(Text, default="")
     owner = Column(String(255), nullable=False)
     due_date = Column(String(50), default="2026-09-30")
-    status = Column(String(50), default="Open")  # Open, In Progress, Resolved
+    status = Column(String(50), default="Open")  # Open, Remediation In Progress, Pending Verification, Resolved
+    risk_id = Column(String(36), ForeignKey("risks.id"), nullable=True)
+    asset_id = Column(String(36), ForeignKey("assets.id"), nullable=True)
     organization_id = Column(String(36), ForeignKey("organizations.id"), nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     organization = relationship("Organization", back_populates="gaps")
+    risk = relationship("Risk")
+    asset = relationship("Asset")
     remediations = relationship("RemediationTask", back_populates="gap", cascade="all, delete-orphan")

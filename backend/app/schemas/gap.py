@@ -11,6 +11,8 @@ class GapCreate(BaseModel):
     recommendation: Optional[str] = ""
     owner: str
     due_date: Optional[str] = "2026-09-30"
+    risk_id: Optional[str] = None
+    asset_id: Optional[str] = None
 
 class GapResponse(BaseModel):
     id: str
@@ -23,6 +25,14 @@ class GapResponse(BaseModel):
     owner: str
     due_date: str
     status: str
+    risk_id: Optional[str] = None
+    asset_id: Optional[str] = None
+    risk_title: Optional[str] = None
+    risk_severity: Optional[str] = None
+    asset_name: Optional[str] = None
+    remediation_id: Optional[str] = None
+    remediation_status: Optional[str] = None
+    remediation_task_name: Optional[str] = None
     organization_id: str
     created_at: Optional[datetime] = None
 

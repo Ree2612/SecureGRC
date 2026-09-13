@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.core.database import Base, engine, SessionLocal
+from app.core.database import Base, engine, SessionLocal, safe_migrate_schema
 from app.api.v1.router import api_router
 from app.seed import seed_database
 
@@ -11,6 +11,7 @@ from app.seed import seed_database
 async def lifespan(app: FastAPI):
     # Initialize DB tables and seed data
     Base.metadata.create_all(bind=engine)
+    safe_migrate_schema()
     db = SessionLocal()
     try:
         seed_database(db)

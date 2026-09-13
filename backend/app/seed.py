@@ -613,6 +613,18 @@ def seed_database(db: Session = None):
                 due_date="2026-09-30",
                 status="In Progress",
                 organization_id=org.id
+            ),
+            Gap(
+                title="Privileged Cloud Role Time-Bound Elevation Policy Deficit",
+                framework="NIST CSF 2.0",
+                control_id=created_controls[5].id,
+                control_code="PR.AC-04",
+                business_impact="Permanent admin rights without time-bound JIT elevation risks persistent privilege escalation.",
+                recommendation="Enforce 4-hour max session TTL for AWS IAM AdministratorAccess role via Teleport / Okta ASA.",
+                owner="Sarah Jenkins",
+                due_date="2026-10-20",
+                status="Open",
+                organization_id=org.id
             )
         ]
         db.add_all(gaps)
@@ -656,7 +668,7 @@ def seed_database(db: Session = None):
                 priority="Low",
                 owner="Elena Rostova",
                 progress=100,
-                status="Completed",
+                status="Verified",
                 due_date="2026-08-30",
                 organization_id=org.id
             ),
@@ -678,6 +690,16 @@ def seed_database(db: Session = None):
                 progress=90,
                 status="In Progress",
                 due_date="2026-10-10",
+                organization_id=org.id
+            ),
+            RemediationTask(
+                task_name="Implement AWS IAM Identity Center Just-In-Time Access Elevation",
+                gap_id=gaps[5].id,
+                priority="High",
+                owner="Sarah Jenkins",
+                progress=15,
+                status="In Progress",
+                due_date="2026-10-20",
                 organization_id=org.id
             )
         ]
@@ -918,28 +940,30 @@ def seed_database(db: Session = None):
 
 def seed_organization_records(db: Session, target_org_id: str):
     """
-    Populates full baseline controls, risks, assets, gaps, and remediation tasks
-    for a newly created or unseeded organization tenant.
+    Populates full baseline controls for a newly created or unseeded organization tenant 
+    based on its primary framework.
     """
-    # 1. Find a reference organization to clone controls and standard records from
-    ref_org = db.query(Organization).filter(Organization.id != target_org_id).first()
-    if not ref_org:
+    from app.api.v1.frameworks import STANDARD_CONTROLS
+
+    target_org = db.query(Organization).filter(Organization.id == target_org_id).first()
+    if not target_org:
         return
 
-    # Clone Controls
-    ref_controls = db.query(Control).filter(Control.organization_id == ref_org.id).all()
+    framework = target_org.primary_framework
+    target_standard = STANDARD_CONTROLS.get(framework, STANDARD_CONTROLS.get("NIST CSF 2.0", []))
+
     new_controls = []
-    for c in ref_controls:
+    for tc in target_standard:
         new_controls.append(Control(
-            control_code=c.control_code,
-            name=c.name,
-            requirement=c.requirement,
-            framework=c.framework,
-            function=c.function,
-            category=c.category,
+            control_code=tc["code"],
+            name=tc["name"],
+            requirement=tc.get("desc", ""),
+            framework=framework,
+            function=tc.get("category", "Mapped Function"),
+            category=tc.get("category", "Mapped Domain"),
             implementation_status="Not Implemented",
             effectiveness="Untested",
-            owner=c.owner,
+            owner="Unassigned",
             notes="",
             organization_id=target_org_id
         ))

@@ -58,6 +58,21 @@ STANDARD_CONTROLS = {
     ]
 }
 
+@router.get("/controls")
+def get_standard_controls(
+    framework: str = Query(..., description="Framework name"),
+    current_user: User = Depends(get_current_user)
+):
+    controls = STANDARD_CONTROLS.get(framework, [])
+    return [
+        {
+            "control_code": c["code"],
+            "name": c["name"],
+            "requirement": c["desc"]
+        }
+        for c in controls
+    ]
+
 def calculate_similarity(text1, text2):
     set1 = set(text1.lower().split())
     set2 = set(text2.lower().split())

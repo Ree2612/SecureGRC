@@ -8,7 +8,8 @@ class Evidence(Base):
     __tablename__ = "evidence"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    control_id = Column(String(36), ForeignKey("controls.id"), nullable=False)
+    control_id = Column(String(36), ForeignKey("controls.id"), nullable=True)
+    remediation_id = Column(String(36), ForeignKey("remediation_tasks.id"), nullable=True)
     title = Column(String(255), nullable=False)
     file_name = Column(String(255), nullable=False)
     file_type = Column(String(50), default="PDF")
@@ -17,3 +18,4 @@ class Evidence(Base):
     uploaded_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     control = relationship("Control", back_populates="evidence")
+    remediation_task = relationship("RemediationTask", backref="evidence_items")

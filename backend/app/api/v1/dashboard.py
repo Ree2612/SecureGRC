@@ -7,6 +7,7 @@ from app.models.risk import Risk
 from app.models.control import Control
 from app.models.gap import Gap
 from app.models.remediation import RemediationTask
+from app.models.organization import Organization
 from app.schemas.dashboard import (
     KpisResponse,
     NistCoverageItem,
@@ -19,6 +20,12 @@ from app.api.v1.frameworks import STANDARD_CONTROLS, calculate_similarity
 
 def get_controls_for_framework(db: Session, org_id: str, framework: str):
     c_query = db.query(Control).filter(Control.organization_id == org_id)
+    
+    if not framework:
+        org = db.query(Organization).filter(Organization.id == org_id).first()
+        if org:
+            framework = org.primary_framework
+
     if not framework or framework == "All Standards":
         return c_query.all()
         
@@ -32,16 +39,36 @@ def get_controls_for_framework(db: Session, org_id: str, framework: str):
     if not target_standard:
         return []
         
+    all_existing_controls = c_query.all()
+        
     virtual_controls = []
     for tc in target_standard:
+        t_text = f"{tc['name']} {tc.get('desc', '')}"
+        
+        best_match = None
+        highest_score = 0
+        for ec in all_existing_controls:
+            e_text = f"{ec.name} {ec.requirement}"
+            score = calculate_similarity(e_text, t_text)
+            if score > highest_score:
+                highest_score = score
+                best_match = ec
+                
+        if best_match and highest_score > 0.05:
+            imp_status = best_match.implementation_status
+            eff = best_match.effectiveness
+        else:
+            imp_status = "Not Implemented"
+            eff = "Untested"
+
         virtual_controls.append(Control(
             id=str(uuid.uuid4()),
             control_code=tc["code"],
             name=tc["name"],
             category=tc.get("category", "Mapped Domain"),
             function=tc.get("category", "Mapped Function"),
-            implementation_status="Not Implemented",
-            effectiveness="Untested",
+            implementation_status=imp_status,
+            effectiveness=eff,
             framework=framework,
             organization_id=org_id
         ))

@@ -9,6 +9,12 @@ from app.api.deps import get_current_user
 
 router = APIRouter()
 
+@router.get("/debug_db_path")
+def get_db_path():
+    from app.core.config import settings
+    import os
+    return {"uri": settings.SQLALCHEMY_DATABASE_URI, "cwd": os.getcwd()}
+
 @router.get("/me", response_model=OrganizationResponse)
 def get_my_organization(
     current_user: User = Depends(get_current_user),
