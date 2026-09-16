@@ -10,6 +10,7 @@ from app.models.framework import Framework, FrameworkMapping
 from app.models.report import Report
 from app.models.activity import Activity
 from app.models.notification import Notification
+from app.models.system_log import SystemLog
 
 __all__ = [
     "Organization",
@@ -25,4 +26,5 @@ __all__ = [
     "Report",
     "Activity",
     "Notification",
+    "SystemLog",
 ]

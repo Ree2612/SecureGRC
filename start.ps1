@@ -13,8 +13,8 @@ if ($pidsToKill) {
     Start-Sleep -Seconds 1
 }
 
-Write-Host "[1/3] Starting FastAPI Backend on port 8000..." -ForegroundColor Yellow
-Start-Process cmd -ArgumentList "/k", "cd /d `"$rootDir\backend`" && python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+Write-Host "[1/3] Starting FastAPI Backend on port 8000 (Connected to MySQL)..." -ForegroundColor Yellow
+Start-Process cmd -ArgumentList "/k", "cd /d `"$rootDir\backend`" && set DB_TYPE=mysql&& set MYSQL_USER=root&& set MYSQL_PASSWORD=kali&& set MYSQL_DB=securegrc&& python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
 
 Write-Host "[2/3] Starting Vite Frontend on port 5173..." -ForegroundColor Yellow
 Start-Process cmd -ArgumentList "/k", "cd /d `"$rootDir\frontend`" && npm run dev"

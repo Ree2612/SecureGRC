@@ -1,5 +1,10 @@
+import sys
+import os
 import uuid
 from datetime import datetime, timezone, timedelta
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from sqlalchemy.orm import Session
 from app.core.database import Base, engine, SessionLocal
 from app.core.security import get_password_hash
@@ -15,6 +20,7 @@ from app.models.framework import Framework, FrameworkMapping
 from app.models.report import Report
 from app.models.activity import Activity
 from app.models.notification import Notification
+from app.models.system_log import SystemLog
 
 def seed_database(db: Session = None):
     close_db = False
@@ -927,8 +933,57 @@ def seed_database(db: Session = None):
             )
         ]
         db.add_all(notifications)
+
+        system_logs = [
+            SystemLog(
+                log_level="INFO",
+                category="SYSTEM",
+                action="INITIALIZE_DATABASE",
+                actor="system",
+                target="securegrc.db",
+                status_code=200,
+                ip_address="127.0.0.1",
+                details="SecureGRC Enterprise Platform database initialized and schema created successfully.",
+                organization_id=org.id
+            ),
+            SystemLog(
+                log_level="INFO",
+                category="AUTH",
+                action="USER_LOGIN",
+                actor="ciso@cybercorp.com",
+                target="/api/v1/auth/login",
+                status_code=200,
+                ip_address="192.168.1.45",
+                details="CISO authenticated via standard password login with JWT token issued.",
+                organization_id=org.id
+            ),
+            SystemLog(
+                log_level="WARNING",
+                category="SECURITY",
+                action="SCAN_GAP_DETECTED",
+                actor="trivy-scanner-bot",
+                target="us-west-2/eks-cluster-prod",
+                status_code=403,
+                ip_address="10.0.4.12",
+                details="Detected open gap: Unautomated Quarterly IAM Access Recertification (Risk Score: HIGH).",
+                organization_id=org.id
+            ),
+            SystemLog(
+                log_level="AUDIT",
+                category="GRC_EVENT",
+                action="CREATE_REMEDIATION_TASK",
+                actor="ciso@cybercorp.com",
+                target="RemediationTask/RT-101",
+                status_code=201,
+                ip_address="192.168.1.45",
+                details="Created remediation task: Automate Okta & AWS IAM Quarterly User Access Reviews.",
+                organization_id=org.id
+            )
+        ]
+        db.add_all(system_logs)
+
         db.commit()
-        print("Database seeded successfully with enterprise GRC dataset!")
+        print("Database seeded successfully with enterprise GRC dataset & database logs!")
 
     except Exception as e:
         db.rollback()

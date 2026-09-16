@@ -18,8 +18,8 @@ for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":5173" ^| findstr "LISTENING
     taskkill /F /PID %%a 2>nul
 )
 
-echo [1/3] Starting FastAPI Backend on port 8000...
-start "SecureGRC-Backend-8000" cmd /k "cd /d ""%ROOT_DIR%backend"" && python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+echo [1/3] Starting FastAPI Backend on port 8000 (Connected to MySQL)...
+start "SecureGRC-Backend-8000" cmd /k "cd /d ""%ROOT_DIR%backend"" && set DB_TYPE=mysql&& set MYSQL_USER=root&& set MYSQL_PASSWORD=kali&& set MYSQL_DB=securegrc&& python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
 
 echo [2/3] Starting Vite Frontend on port 5173...
 start "SecureGRC-Frontend-5173" cmd /k "cd /d ""%ROOT_DIR%frontend"" && npm run dev"
@@ -46,8 +46,8 @@ echo  - Backend REST API: http://localhost:8000/api/v1
 echo  - API Swagger Docs: http://localhost:8000/api/v1/docs
 echo.
 echo  Demo Credentials:
-echo    * CISO Account:    ciso@cybercorp.com   / SecurePass2026!
-echo    * Auditor Account: admin@securegrc.io   / AdminPass2026!
+echo    * CISO Account:    ciso@cybercorp.com / SecurePass2026!
+echo    * Auditor Account: admin@securegrc.io / AdminPass2026!
 echo ======================================================================
 echo.
 pause

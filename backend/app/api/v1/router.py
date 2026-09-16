@@ -13,7 +13,8 @@ from app.api.v1 import (
     activities,
     notifications,
     users,
-    settings
+    settings,
+    logs
 )
 
 api_router = APIRouter()
@@ -33,3 +34,4 @@ api_router.include_router(activities.router, prefix="/activities", tags=["Activi
 api_router.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
 api_router.include_router(users.router, prefix="/users", tags=["Users"])
 api_router.include_router(settings.router, prefix="/settings", tags=["Settings"])
+api_router.include_router(logs.router, prefix="/logs", tags=["Database Logs"])

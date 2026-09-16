@@ -37,6 +37,42 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def database_logging_middleware(request, call_next):
+    from app.services.logger_service import log_to_db
+    path = request.url.path
+    if path.startswith("/api/v1") and not path.endswith("/logs"):
+        method = request.method
+        client_ip = request.client.host if request.client else "127.0.0.1"
+        try:
+            response = await call_next(request)
+            status_code = response.status_code
+            log_level = "ERROR" if status_code >= 400 else "INFO"
+            log_to_db(
+                log_level=log_level,
+                category="API",
+                action=f"HTTP_{method}",
+                actor="api_client",
+                target=path,
+                status_code=status_code,
+                ip_address=client_ip,
+                details=f"{method} request to {path} returned status {status_code}"
+            )
+            return response
+        except Exception as exc:
+            log_to_db(
+                log_level="CRITICAL",
+                category="API",
+                action=f"HTTP_{method}_EXCEPTION",
+                actor="api_client",
+                target=path,
+                status_code=500,
+                ip_address=client_ip,
+                details=f"Unhandled exception during {method} {path}: {str(exc)}"
+            )
+            raise exc
+    return await call_next(request)
+
 # Register API v1 routes
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
